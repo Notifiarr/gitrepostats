@@ -7,7 +7,16 @@
 ----------------------------------
 */
 
-require '../loader.php';
+if (file_exists('loader.php')) {
+    define('ABSOLUTE_PATH', './');
+}
+if (file_exists('../loader.php')) {
+    define('ABSOLUTE_PATH', '../');
+}
+if (file_exists('../../loader.php')) {
+    define('ABSOLUTE_PATH', '../../');
+}
+require ABSOLUTE_PATH . 'loader.php';
 
 $repository         = $_POST['repository'];
 $git                = new Git($repository);
@@ -31,7 +40,7 @@ foreach ($totalLines['shell'] as $file) {
     sort($fileParts, SORT_NUMERIC);    
     $linesOfCode += intval($fileParts[1]);
 
-    if (str_contains($fileParts[0], '.') && $fileParts[0][0] != '.' && !is_dir(RELATIVE_PATH . $repository . '.' . $fileParts[0][0])) {
+    if (str_contains($fileParts[0], '.') && $fileParts[0][0] != '.' && !is_dir(ABSOLUTE_PATH . $repository . '.' . $fileParts[0][0])) {
         $filePathParts  = explode('.', $fileParts[0]);
         $extension      = trim(end($filePathParts));
 

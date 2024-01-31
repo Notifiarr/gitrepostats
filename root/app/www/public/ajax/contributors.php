@@ -10,7 +10,7 @@
 require 'shared.php';
 
 if ($_POST['m'] == 'init') {
-    ?><h3>Contributors <?= '<br><code>./' . $repository ?></code></h3><hr><?php
+    ?><h3>Contributors <br><code><?= $repository ?></code></h3><hr><?php
 
     ?><div class="row"><?php
     foreach ($contributors['shell'] as $contributor) {

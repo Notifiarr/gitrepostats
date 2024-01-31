@@ -7,6 +7,20 @@
 ----------------------------------
 */
 
+function startup()
+{
+    if (!file_exists(SETTINGS_FILE)) {
+        file_put_contents(SETTINGS_FILE, '{}');
+    }
+
+    createDirectoryTree(REPOSITORY_PATH);
+}
+
+function createDirectoryTree($tree)
+{
+    system('mkdir -p ' . $tree);
+}
+
 function getRepositoryList()
 {
     $repositories = [];

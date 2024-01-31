@@ -17,11 +17,15 @@ require 'includes/header.php';
         <?php if (!$repositories) { ?>
         <div class="col-xl-12 grid-margin stretch-card">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" id="page-content">
                     <div class="row">
                         No repositories found.
                     </div>
-                    <h6 class="text-muted font-weight-normal">Please clone/add them to <code><?= REPOSITORY_PATH ?></code></h6>
+                    <?php if ($settings['global']['repositoryPath']) { ?>
+                        <h6 class="text-muted font-weight-normal">Please clone/add them to <code><?= REPOSITORY_PATH ?></code></h6>
+                    <?php } else { ?>
+                        <h6 class="text-muted font-weight-normal">Please clone/add them to <code><?= REPOSITORY_PATH ?></code> or open the Settings and specify a path (such as <code>/config/repositories</code> for docker)</h6>
+                    <?php } ?>
                 </div>
             </div>
         </div>

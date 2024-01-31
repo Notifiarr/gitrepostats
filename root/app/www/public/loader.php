@@ -10,20 +10,32 @@
 // This will NOT report uninitialized variables
 error_reporting(E_ERROR | E_PARSE);
 
-//-- DETERMINE LOCATION
-if (file_exists('loader.php')) {
-    define('RELATIVE_PATH', './');
-} elseif (file_exists('../loader.php')) {
-    define('RELATIVE_PATH', '../');
-} elseif (file_exists('../../loader.php')) {
-    define('RELATIVE_PATH', '../../');
+if (!defined('ABSOLUTE_PATH')) {
+    if (file_exists('loader.php')) {
+        define('ABSOLUTE_PATH', './');
+    }
+    if (file_exists('../loader.php')) {
+        define('ABSOLUTE_PATH', '../');
+    }
+    if (file_exists('../../loader.php')) {
+        define('ABSOLUTE_PATH', '../../');
+    }
 }
 
 //-- INCLUDE DEFINES
-require RELATIVE_PATH . 'includes/constants.php';
+require ABSOLUTE_PATH . 'includes/constants.php';
+
+//-- GRAB SETTINGS FILE DATA
+$settings = json_decode(file_get_contents(SETTINGS_FILE), true);
+if ($settings['global']['repositoryPath']) {
+    if (substr($settings['global']['repositoryPath'], -1) != '/') {
+        $settings['global']['repositoryPath'] .= '/';
+    }
+}
+define('REPOSITORY_PATH', ($settings['global']['repositoryPath'] ? $settings['global']['repositoryPath'] : '/config/repositories/'));
 
 //-- INCLUDE FUNCTIONS
-$dir = RELATIVE_PATH . 'functions';
+$dir = ABSOLUTE_PATH . 'functions';
 $handle = opendir($dir);
 while ($file = readdir($handle)) {
     if ($file[0] != '.' && !is_dir($dir . '/' . $file)) {
@@ -33,7 +45,7 @@ while ($file = readdir($handle)) {
 closedir($handle);
 
 //-- INCLUDE CLASSES
-$dir = RELATIVE_PATH . 'classes';
+$dir = ABSOLUTE_PATH . 'classes';
 $handle = opendir($dir);
 while ($file = readdir($handle)) {
     if ($file[0] != '.' && !is_dir($dir . '/' . $file)) {
@@ -42,4 +54,5 @@ while ($file = readdir($handle)) {
 }
 closedir($handle);
 
+startup();
 $repositories = getRepositoryList();

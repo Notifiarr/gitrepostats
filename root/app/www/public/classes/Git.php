@@ -8,7 +8,7 @@
 */
 
 //-- BRING IN THE TRAITS
-$traits     = RELATIVE_PATH . 'classes/traits/Git/';
+$traits     = ABSOLUTE_PATH . 'classes/traits/Git/';
 $traitsDir  = opendir($traits);
 while ($traitFile = readdir($traitsDir)) {
     if (str_contains($traitFile, '.php')) {
@@ -30,7 +30,7 @@ class Git
     public function __construct($repository)
     {
         $this->repository   = $repository;
-        $this->cd           = 'cd ' . RELATIVE_PATH . $this->repository .' && ';
+        $this->cd           = 'cd ' . $this->repository .' && ';
     }
 
     public function __toString()
@@ -56,7 +56,7 @@ class Git
 
     public function clone($repository, $folder)
     {
-        $cmd    = 'git clone "' . $repository . '" ' . RELATIVE_PATH . REPOSITORY_PATH . $folder . ' 2>&1';
+        $cmd    = 'git clone "' . $repository . '" ' . REPOSITORY_PATH . $folder . ' 2>&1';
         $shell  = shell_exec($cmd);
     
         return ['cmd' => $cmd, 'shell' => $shell];

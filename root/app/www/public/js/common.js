@@ -5,7 +5,7 @@ $(document).ready(function () {
 function loadPage(page)
 {
     const repository = $('#active-repository').val();
-    if (repository == '0') {
+    if (repository == '0' && page != 'settings') {
         toast('Active Repository', 'Please select a repository before trying to view information', 'error');
         return;
     }
@@ -18,6 +18,33 @@ function loadPage(page)
         data: '&m=init&repository=' + repository,
         success: function (resultData) {
             $('#page-content').html(resultData);
+        }
+    });
+}
+// ---------------------------------------------------------------------------------------------
+function saveSettings()
+{
+    let params = '';
+    $.each($('.setting'), function () {
+        const field = $(this).attr('id');
+
+        let val = '';
+        if ($(this).is(':checkbox') || $(this).is(':radio')) {
+            val = $(this).prop('checked') ? 1 : 0;
+        } else {
+            val = $(this).val();
+        }
+
+        params += '&' + field + '=' + val;
+    });
+
+    $.ajax({
+        type: 'POST',
+        url: 'ajax/settings.php',
+        data: '&m=saveSettings' + params,
+        success: function (resultData) {
+            toast('Settings', 'Settings have been updated', 'info');
+            reload();
         }
     });
 }
@@ -246,5 +273,10 @@ function dialogClose(elm)
     $('#' + id).click();
     $('#' + id).remove();
 
+}
+// -------------------------------------------------------------------------------------------
+function reload()
+{
+    window.location.href='/';
 }
 // -------------------------------------------------------------------------------------------

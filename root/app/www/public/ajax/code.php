@@ -10,7 +10,8 @@
 require 'shared.php';
 
 if ($_POST['m'] == 'init') {
-    ?><h3>Code <?= '<br><code>./' . $repository ?></code></h3><hr><?php
+    ?><h3>Code <br><code><?= $repository ?></code></h3><hr><?php
+
     $labels = $dataFiles = $dataLines = $colors = '';
     $usedColors = [];
     foreach ($fileTypes as $fileType => $fileTypeData) {

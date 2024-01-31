@@ -41,7 +41,7 @@ if ($_POST['m'] == 'addNewRepository') {
 
 if ($_POST['m'] == 'cloneRepository') {
     echo '<center><h4>Clone result</h4></center>';
-    if (is_dir(RELATIVE_PATH . REPOSITORY_PATH . $_POST['folder'])) {
+    if (is_dir(REPOSITORY_PATH . $_POST['folder'])) {
         $error = 'The path <code>' . REPOSITORY_PATH . $_POST['folder'] . '</code> is already used';
     }
 

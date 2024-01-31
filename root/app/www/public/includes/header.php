@@ -80,6 +80,12 @@ if ($repositories) {
                         <span class="menu-title">Code</span>
                     </a>
                 </li>
+                <li class="nav-item menu-items">
+                    <a class="nav-link" href="#" onclick="loadPage('settings')">
+                        <span class="menu-icon"><i class="fas fa-cogs"></i></span>
+                        <span class="menu-title">Settings</span>
+                    </a>
+                </li>
                 <li class="fixed-bottom ms-2">
                     <!-- https://themewagon.com/themes/corona-free-responsive-bootstrap-4-admin-dashboard-template/ -->
                     <span class="text-muted d-block text-center text-sm-right d-sm-inline-block">Theme by <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">bootstrapdash</a></span>

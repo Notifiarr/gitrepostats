@@ -10,7 +10,7 @@
 require 'shared.php';
 
 if ($_POST['m'] == 'init') {
-    ?><h3>Overview <?= '<br><code>./' . $repository ?></code></h3><hr><?php
+    ?><h3>Overview <br><code><?= $repository ?></code></h3><hr><?php
 
     $regex = '/{(?<hash>(.*))}~{(?<date>(.*))}~{(?<relative>(.*))}~{(?<branch>(.*))}~{(?<note>(.*))}~{(?<authorName>(.*))}~{(?<authorEmail>(.*))}/';
 

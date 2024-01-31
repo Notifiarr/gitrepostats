@@ -10,7 +10,7 @@
 require 'shared.php';
 
 if ($_POST['m'] == 'init') {
-    ?><h3>Branches <?= '<br><code>./' . $repository ?></code></h3><hr><?php
+    ?><h3>Branches <br><code><?= $repository ?></code></h3><hr><?php
 
     $remoteLabel = false;
     ?>
