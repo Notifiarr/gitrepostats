@@ -33,6 +33,8 @@ if ($settings['global']['repositoryPath']) {
     }
 }
 define('REPOSITORY_PATH', ($settings['global']['repositoryPath'] ? $settings['global']['repositoryPath'] : '/config/repositories/'));
+$ignoreCodePageExtensions   = $settings['pages']['code']['ignoreExtension'] ? explode(',', str_replace(' ', '', $settings['pages']['code']['ignoreExtension'])) : $ignoreCodePageExtensions;
+$ignoreDirectories          = $settings['global']['ignoreDirectories'] ? explode(',', str_replace(' ', '', $settings['global']['ignoreDirectories'])) : $ignoreDirectories;
 
 //-- INCLUDE FUNCTIONS
 $dir = ABSOLUTE_PATH . 'functions';

@@ -15,7 +15,7 @@ function loadPage(page)
     $.ajax({
         type: 'POST',
         url: 'ajax/' + page + '.php',
-        data: '&m=init&repository=' + repository,
+        data: '&m=init&repository=' + repository + '&page=' + page,
         success: function (resultData) {
             $('#page-content').html(resultData);
         }
@@ -108,6 +108,7 @@ function checkoutBranch()
 function loadRepositoryBranches()
 {
     const repository = $('#active-repository').val();
+    $('#page-content').html('<i class="fas fa-cog fa-spin"></i> Gathering all the data, crunching all the numbers...');
 
     $.ajax({
         type: 'POST',

@@ -37,6 +37,7 @@
         <script src="assets/vendors/progressbar.js/progressbar.min.js"></script>
         <script src="assets/js/off-canvas.js"></script>
         <script src="assets/js/hoverable-collapse.js"></script>
+        <script src="assets/js/misc.js"></script>
         <script src="<?= ABSOLUTE_PATH ?>js/common.js?t=<?= filemtime(ABSOLUTE_PATH . 'js/common.js') ?>" type="text/javascript"></script>
         <script src="<?= ABSOLUTE_PATH ?>js/git.js?t=<?= filemtime(ABSOLUTE_PATH . 'js/git.js') ?>" type="text/javascript"></script>
     </body>

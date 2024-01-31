@@ -14,6 +14,9 @@ if ($_POST['m'] == 'init') {
 
     $labels = $dataFiles = $dataLines = $colors = '';
     $usedColors = [];
+    array_sort_by_key($fileTypes, 'lines', 'desc');
+    $fileTypes = array_slice($fileTypes, 0, ($settings['pages']['code']['limit'] ? $settings['pages']['code']['limit'] : 20));
+
     foreach ($fileTypes as $fileType => $fileTypeData) {
         $randomColor = randomColor($usedColors);
         $usedColors[] = $randomColor;

@@ -13,6 +13,7 @@ if ($_POST['m'] == 'init') {
     ?><h3>Contributors <br><code><?= $repository ?></code></h3><hr><?php
 
     ?><div class="row"><?php
+
     foreach ($contributors['shell'] as $contributor) {
         $parts = explode("\t", $contributor);
         $parts = array_filter($parts);
@@ -30,6 +31,7 @@ if ($_POST['m'] == 'init') {
         $newestCommit   = $commitHistory['shell'][1];
 
         $changed = $added = $removed = 0;
+
         foreach ($authorStats['shell'] as $line) {
             if (str_contains($line, 'change') || str_contains($line, '(+)') || str_contains($line, '(-)')) {
                 $lineParts = explode(',', trim($line));
@@ -79,57 +81,64 @@ if ($_POST['m'] == 'init') {
             }
             $oldest = $timestamp;
 
-            $graphPoints[date('Y-m-d', $timestamp)]++;
+            if (count($graphPoints) <= 24) {
+                $graphPoints[date('Y-m', $timestamp)]++;
+            }
         }
+        ksort($graphPoints);
 
         $labels = $data = '';
         foreach ($graphPoints as $graphPointDate => $graphPointCount) {
-            $labels .= ($labels ? ', ' : '') . '"' . $graphPointDate . '"';
-            $data .= ($data ? ', ' : '') . intval($graphPointCount);
+            $label = date('M. y', strtotime($graphPointDate . '-1 12:00:00'));
+
+            $labels .= ($labels ? ', ' : '') . '"' . $label . '"';
+            $data   .= ($data ? ', ' : '') . intval($graphPointCount);
         }
         ?>
         <div class="col-sm-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <h4><?= $author ?></h4>
-                    <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
-                        <div class="col-xl-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    Commits: <span class="text-muted"><?= number_format($commits) ?>/<?= number_format($totalCommits['shell']) ?></span><br>
-                                    <?php if ($newest) { ?>
-                                    Newest: <span class="text-muted"><?= date('M. jS, Y', $newest) ?></span><br>
-                                    <?php } ?>
-                                    <?php if ($oldest) { ?>
-                                    Oldest: <span class="text-muted"><?= date('M. jS, Y', $oldest) ?></span><br>
-                                    <?php } ?>
-                                    Files changed: <span class="text-muted"><?= number_format($changed) ?></span><br>
-                                    Lines added: <span class="text-muted"><?= number_format($added) ?></span><br>
-                                    Lines removed: <span class="text-muted"><?= number_format($removed) ?></span><br>
+                    <div class="bg-gray-dark rounded">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-12">
+                                <div class="card ms-2 mt-2">
+                                    <div class="card-body">
+                                        Commits: <span class="text-muted"><?= number_format($commits) ?>/<?= number_format($totalCommits['shell']) ?></span><br>
+                                        <?php if ($newest) { ?>
+                                        Newest: <span class="text-muted"><?= date('M. jS, Y', $newest) ?></span><br>
+                                        <?php } ?>
+                                        <?php if ($oldest) { ?>
+                                        Oldest: <span class="text-muted"><?= date('M. jS, Y', $oldest) ?></span><br>
+                                        <?php } ?>
+                                        Files changed: <span class="text-muted"><?= number_format($changed) ?></span><br>
+                                        Lines added: <span class="text-muted"><?= number_format($added) ?></span><br>
+                                        Lines removed: <span class="text-muted"><?= number_format($removed) ?></span><br>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xl-4 col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <?php 
-                                    if (!empty($newestCommit)) {
+                            <div class="col-lg-4 col-sm-12">
+                                <div class="card mt-2">
+                                    <div class="card-body">
+                                        <?php 
+                                        if (!empty($newestCommit)) {
+                                            ?>
+                                            Commit: <?= substr(trim(str_replace('commit', '', $newestCommit[0])), 0, 7) ?><br>
+                                            Date: <?= trim(str_replace('Date:', '', $newestCommit[2])) ?><br>
+                                            <ul><li><?= implode('</li><li>', array_slice($newestCommit, 3)) ?></li></ul>
+                                            <?php
+                                        } else {
+                                            ?>No commit information found.<?php
+                                        }
                                         ?>
-                                        Commit: <?= substr(trim(str_replace('commit', '', $newestCommit[0])), 0, 7) ?><br>
-                                        Date: <?= trim(str_replace('Date:', '', $newestCommit[2])) ?><br>
-                                        <ul><li><?= implode('</li><li>', array_slice($newestCommit, 3)) ?></li></ul>
-                                        <?php
-                                    } else {
-                                        ?>No commit information found.<?php
-                                    }
-                                    ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xl-5 col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <canvas id="contributor-<?= $graphHash ?>"></canvas>
+                            <div class="col-lg-5 col-sm-12">
+                                <div class="card me-2 mb-2 mt-2">
+                                    <div class="card-body">
+                                        <canvas id="contributor-<?= $graphHash ?>"></canvas>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -163,5 +172,4 @@ if ($_POST['m'] == 'init') {
         <?php
     }
     ?></div><?php
-
 }

@@ -11,15 +11,33 @@ trait Files
 {
     public function totalFiles()
     {
-        $cmd    = $this->cd . 'git ls-files | wc -l';
+        $grepExcludeDirectories = '';
+        if ($this->ignoreDirectories) {
+            foreach ($this->ignoreDirectories as $directory) {
+                $grepExcludeDirectories .= ($grepExcludeDirectories ? '|' : '') . $directory . '/*';
+            }
+
+            $grepExcludeDirectories = '| grep -v -E "' . $grepExcludeDirectories . '" ';
+        }
+
+        $cmd    = $this->cd . 'git ls-files ' . $grepExcludeDirectories  . '| wc -l';
         $shell  = shell_exec($cmd);
     
         return ['cmd' => $cmd, 'shell' => $shell];
     }
-    
+
     public function totalLines()
     {
-        $cmd    = $this->cd . 'git ls-files | xargs wc -l';
+        $grepExcludeDirectories = '';
+        if ($this->ignoreDirectories) {
+            foreach ($this->ignoreDirectories as $directory) {
+                $grepExcludeDirectories .= ($grepExcludeDirectories ? '|' : '') . $directory . '/*';
+            }
+
+            $grepExcludeDirectories = '| grep -v -E "' . $grepExcludeDirectories . '" ';
+        }
+
+        $cmd    = $this->cd . 'git ls-files ' . $grepExcludeDirectories  . '| xargs wc -l';
         $shell  = explode("\n", shell_exec($cmd));
     
         return ['cmd' => $cmd, 'shell' => $shell];

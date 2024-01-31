@@ -26,11 +26,15 @@ class Git
 
     public $cd;
     public $repository;
+    public $ignoreDirectories;
 
     public function __construct($repository)
     {
-        $this->repository   = $repository;
-        $this->cd           = 'cd ' . $this->repository .' && ';
+        global $ignoreDirectories;
+
+        $this->repository           = $repository;
+        $this->cd                   = 'cd ' . $this->repository .' && ';
+        $this->ignoreDirectories    = $ignoreDirectories;
     }
 
     public function __toString()
@@ -64,9 +68,9 @@ class Git
 
     public function size()
     {
-        $cmd    = $this->cd . 'git count-objects -H';
+        $cmd    = $this->cd . 'git count-objects -vH';
         $shell  = explode("\n", shell_exec($cmd));
-    
+
         return ['cmd' => $cmd, 'shell' => array_filter($shell)];
     }
 }

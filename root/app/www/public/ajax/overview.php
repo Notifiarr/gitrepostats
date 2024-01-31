@@ -30,12 +30,32 @@ if ($_POST['m'] == 'init') {
         }
     }
 
+    $newest = $settings['pages']['overview']['displayNewest'] ? $settings['pages']['overview']['displayNewest'] : 100;
+    $oldest = $settings['pages']['overview']['displayOldest'] ? $settings['pages']['overview']['displayOldest'] : 100;
+    $hidden = 0;
+    $commits = $overview['shell'];
+
+    if (count($commits) > ($newest + $oldest)) {
+        $newestCommits  = $oldestCommits = [];
+        $hidden         = count($commits) - ($newest + $oldest);
+        $newestCommits  = array_slice($commits, 0, $newest);
+        $oldestCommits  = array_slice($commits, ($oldest * -1));
+
+        $commits = [];
+        foreach ($newestCommits as $newestCommit) {
+            $commits[] = $newestCommit;
+        }
+        foreach ($oldestCommits as $oldestCommit) {
+            $commits[] = $oldestCommit;
+        }
+    }
+
     $display = '';
-    foreach ($overview['shell'] as $line) {
-        list($tree, $stuff) = explode('{', $line);
+    foreach ($commits as $commitIndex => $commit) {
+        list($tree, $stuff) = explode('{', $commit);
         $display .= '<span>' . str_pad($tree, $treeSpacing, ' ', STR_PAD_RIGHT) . '</span>';
 
-        $details    = str_replace($tree, '', $line);
+        $details    = str_replace($tree, '', $commit);
         $details    = preg_match($regex, $details, $matches);
         $hash       = str_replace('hash:', '', $matches['hash']);
         $date       = str_replace('date:', '', $matches['date']);
@@ -76,6 +96,22 @@ if ($_POST['m'] == 'init') {
         $display .= str_pad($email, ($emailSpacing - strlen($author)), ' ', STR_PAD_RIGHT);
         $display .= '   ' . trim($branch) . ' ' . str_replace('note:', '', $matches['note']);
         $display .= '<br>';
+
+        if ($hidden > 0 && ($commitIndex + 1) == $newest) {
+            $hiddenLine = '~~~~~~~~~~~~~~~[ Truncated commits: ' . $hidden . ' ]~~~~~~~~~~~~~~~';
+
+            $display .= '<br>';
+            for ($x = 0; $x < strlen($hiddenLine) + 2; $x++) {
+                $display .= '~';
+            }
+
+            $display .= '<br> ' . $hiddenLine . ' <br>';
+
+            for ($x = 0; $x < strlen($hiddenLine) + 2; $x++) {
+                $display .= '~';
+            }
+            $display .= '<br><br>';
+        }
     }
 
     ?>
@@ -96,7 +132,7 @@ if ($_POST['m'] == 'init') {
                         </div>
                         <div class="text-md-center text-xl-left me-5">
                             <h6 class="mb-1">Objects</h6>
-                            <p class="text-muted mb-0"><?= number_format($repoObjects) ?></p>
+                            <p class="text-muted mb-0"><?= $repoObjects ?></p>
                         </div>
                         <div class="text-md-center text-xl-left me-5">
                             <h6 class="mb-1">Size</h6>
