@@ -46,6 +46,15 @@ while ($file = readdir($handle)) {
 }
 closedir($handle);
 
+$dir = ABSOLUTE_PATH . 'functions/helpers';
+$handle = opendir($dir);
+while ($file = readdir($handle)) {
+    if ($file[0] != '.' && !is_dir($dir . '/' . $file)) {
+        require $dir . '/' . $file;
+    }
+}
+closedir($handle);
+
 //-- INCLUDE CLASSES
 $dir = ABSOLUTE_PATH . 'classes';
 $handle = opendir($dir);

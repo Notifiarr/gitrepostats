@@ -25,10 +25,19 @@ if ($_POST['m'] == 'init') {
         if (str_contains($author, '<')) {
             list($author, $email) = explode('<', $author);
         }
-        $author         = trim($author);
+        $author = trim($author);
+
+        if (!$author) {
+            continue;
+        }
+
         $authorStats    = $git->contributorStats($author);
         $commitHistory  = $git->contributorCommits($author);
         $newestCommit   = $commitHistory['shell'][1];
+
+        if (empty($newestCommit)) {
+            continue;
+        }
 
         $changed = $added = $removed = 0;
 
@@ -120,17 +129,19 @@ if ($_POST['m'] == 'init') {
                             <div class="col-lg-4 col-sm-12">
                                 <div class="card mt-2">
                                     <div class="card-body">
-                                        <?php 
-                                        if (!empty($newestCommit)) {
-                                            ?>
-                                            Commit: <?= substr(trim(str_replace('commit', '', $newestCommit[0])), 0, 7) ?><br>
-                                            Date: <?= trim(str_replace('Date:', '', $newestCommit[2])) ?><br>
-                                            <ul><li><?= implode('</li><li>', array_slice($newestCommit, 3)) ?></li></ul>
-                                            <?php
-                                        } else {
-                                            ?>No commit information found.<?php
+                                        Commit: <?= substr(trim(str_replace('commit', '', $newestCommit[0])), 0, 7) ?><br>
+                                        Date: <?= trim(str_replace('Date:', '', $newestCommit[2])) ?><br>
+                                        <ul>
+                                        <?php
+                                        $notes = array_slice($newestCommit, 3);
+                                        foreach ($notes as $note) {
+                                            if (str_contains_any($note, ['Author:', 'Date:', 'Merge:', 'Signed-off-by:', 'Co-authored-by:']) || substr($note, 0, 7) == 'commit ') {
+                                                continue;
+                                            }
+                                            ?><li><?= $note ?></li><?php
                                         }
                                         ?>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>

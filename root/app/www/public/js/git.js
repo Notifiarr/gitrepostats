@@ -1,6 +1,7 @@
 function gitPull()
 {
     const repository = $('#active-repository').val();
+    $('#page-content').html('<i class="fas fa-cog fa-spin"></i> Gathering all the data, crunching all the numbers...');
 
     $.ajax({
         type: 'POST',

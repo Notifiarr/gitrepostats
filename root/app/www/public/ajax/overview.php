@@ -37,7 +37,7 @@ if ($_POST['m'] == 'init') {
 
     if (count($commits) > ($newest + $oldest)) {
         $newestCommits  = $oldestCommits = [];
-        $hidden         = count($commits) - ($newest + $oldest);
+        $hidden         = $totalCommits['shell'] - ($newest + $oldest);
         $newestCommits  = array_slice($commits, 0, $newest);
         $oldestCommits  = array_slice($commits, ($oldest * -1));
 
@@ -127,15 +127,15 @@ if ($_POST['m'] == 'init') {
                     <h4 class="card-title">Repository</h4>
                     <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
                         <div class="text-md-center text-xl-left me-5">
-                            <h6 class="mb-1">Commits</h6>
+                            <h6 class="mb-1">Commits <i class="far fa-question-circle text-primary" title="Unique commits; no merges, etc"></i></h6>
                             <p class="text-muted mb-0"><?= number_format($totalCommits['shell']) ?></p>
                         </div>
                         <div class="text-md-center text-xl-left me-5">
-                            <h6 class="mb-1">Objects</h6>
+                            <h6 class="mb-1">Objects <i class="far fa-question-circle text-primary" title="Packed & loose objects"></i></h6>
                             <p class="text-muted mb-0"><?= $repoObjects ?></p>
                         </div>
                         <div class="text-md-center text-xl-left me-5">
-                            <h6 class="mb-1">Size</h6>
+                            <h6 class="mb-1">Size <i class="far fa-question-circle text-primary" title="Packed & loose files"></i></h6>
                             <p class="text-muted mb-0"><?= $repoSize ?></p>
                         </div>
                     </div>

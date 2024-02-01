@@ -21,7 +21,7 @@ trait Contributors
     {
         $cmd    = $this->cd . 'git log --author="' . $author . '"';
         $shell  = explode("\n", shell_exec($cmd));
-    
+
         $userCommits = [];
         $counter = 0;
         foreach ($shell as $index => $commitLine) {

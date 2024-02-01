@@ -11,7 +11,7 @@ trait Commits
 {
     public function totalCommits()
     {
-        $cmd    = $this->cd . 'git rev-list --count --all';
+        $cmd    = $this->cd . 'git rev-list --count --all --first-parent';
         $shell  = shell_exec($cmd);
     
         return ['cmd' => $cmd, 'shell' => $shell];
