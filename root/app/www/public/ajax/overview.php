@@ -12,6 +12,43 @@ require 'shared.php';
 if ($_POST['m'] == 'init') {
     ?><h3>Overview <br><code><?= $repository ?></code></h3><hr><?php
 
+    $repoObjects    = $git->size();
+    $overview       = $git->log();
+    $branches       = $git->branches();
+    $contributors   = $git->contributors();
+    $totalFiles     = $git->totalFiles();
+    $totalCommits   = $git->totalCommits();
+    $totalLines     = $git->totalLines();
+    $linesOfCode    = 0;
+    $fileTypes      = [];
+
+    foreach ($totalLines['shell'] as $file) {
+        $fileParts = array_filter(explode(' ', $file));
+        sort($fileParts, SORT_NUMERIC);    
+        $linesOfCode += intval($fileParts[1]);
+    
+        if (str_contains($fileParts[0], '.') && $fileParts[0][0] != '.' && !is_dir(ABSOLUTE_PATH . $repository . '.' . $fileParts[0][0])) {
+            $filePathParts  = explode('.', $fileParts[0]);
+            $extension      = trim(end($filePathParts));
+    
+            if (!in_array($extension, $ignoreCodePageExtensions) && !str_contains($extension, '/') && $extension) {
+                $fileTypes[$extension]['files']++;
+                $fileTypes[$extension]['lines'] += intval($fileParts[1]);
+            }
+        }
+    }
+
+    foreach ($repoObjects['shell'] as $repoSizeObject) {
+        if (str_contains($repoSizeObject, 'count') || str_contains($repoSizeObject, 'in-pack')) {
+            $repoObjectCount += preg_replace("/[^0-9]/", '', $repoSizeObject);
+        }
+        if (str_contains($repoSizeObject, 'size') || str_contains($repoSizeObject, 'size-pack')) {
+            $repoSizeTotal += preg_replace("/[^0-9]/", '', $repoSizeObject);
+        }
+    }
+    $repoObjects    = number_format(intval($repoObjectCount));
+    $repoSize       = byteConversion(intval($repoSizeTotal) * 1000);
+
     $regex = '/{(?<hash>(.*))}~{(?<date>(.*))}~{(?<relative>(.*))}~{(?<branch>(.*))}~{(?<note>(.*))}~{(?<authorName>(.*))}~{(?<authorEmail>(.*))}/';
 
     //-- GET MAX WIDTH

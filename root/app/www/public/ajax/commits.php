@@ -12,6 +12,8 @@ require 'shared.php';
 if ($_POST['m'] == 'init') {
     ?><h3>Commits <br><code><?= $repository ?></code></h3><hr><?php
 
+    $overview = $git->log();
+
     $regex = '/{(?<hash>(.*))}~{(?<date>(.*))}~{(?<relative>(.*))}~{(?<branch>(.*))}~{(?<note>(.*))}~{(?<authorName>(.*))}~{(?<authorEmail>(.*))}/';
 
     $yearData = $monthData = $weekData = $dayData = [];

@@ -12,6 +12,9 @@ require 'shared.php';
 if ($_POST['m'] == 'init') {
     ?><h3>Contributors <br><code><?= $repository ?></code></h3><hr><?php
 
+    $contributors   = $git->contributors();
+    $totalCommits   = $git->totalCommits();
+
     ?><div class="row"><?php
 
     foreach ($contributors['shell'] as $contributor) {

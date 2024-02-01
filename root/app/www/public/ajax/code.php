@@ -12,6 +12,24 @@ require 'shared.php';
 if ($_POST['m'] == 'init') {
     ?><h3>Code <br><code><?= $repository ?></code></h3><hr><?php
 
+    $totalLines = $git->totalLines();
+    $fileTypes  = [];
+
+    foreach ($totalLines['shell'] as $file) {
+        $fileParts = array_filter(explode(' ', $file));
+        sort($fileParts, SORT_NUMERIC);
+    
+        if (str_contains($fileParts[0], '.') && $fileParts[0][0] != '.' && !is_dir(ABSOLUTE_PATH . $repository . '.' . $fileParts[0][0])) {
+            $filePathParts  = explode('.', $fileParts[0]);
+            $extension      = trim(end($filePathParts));
+    
+            if (!in_array($extension, $ignoreCodePageExtensions) && !str_contains($extension, '/') && $extension) {
+                $fileTypes[$extension]['files']++;
+                $fileTypes[$extension]['lines'] += intval($fileParts[1]);
+            }
+        }
+    }
+
     $labels = $dataFiles = $dataLines = $colors = '';
     $usedColors = [];
     array_sort_by_key($fileTypes, 'lines', 'desc');

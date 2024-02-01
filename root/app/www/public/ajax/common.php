@@ -9,6 +9,8 @@
 
 require 'shared.php';
 
+$branches = $git->branches();
+
 if ($_POST['m'] == 'loadRepositoryBranches') {
     foreach ($branches['shell'] as $branch) {
         $branchOptions .= '<option ' . (str_contains($branch, '*') ? 'selected' : '') . ' value="' . trim($branch) . '">' . trim($branch) . '</option>';

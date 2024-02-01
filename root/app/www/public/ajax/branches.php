@@ -12,6 +12,9 @@ require 'shared.php';
 if ($_POST['m'] == 'init') {
     ?><h3>Branches <br><code><?= $repository ?></code></h3><hr><?php
 
+    $branches       = $git->branches();
+    $branchHeads    = $git->branchHeads();
+
     $remoteLabel = false;
     ?>
     <div class="row">
